@@ -32,7 +32,8 @@ const getTitle = (title) => {
 
 const InsertPost = async (obj) => {
   const postId = uuidv4();
-  obj['id'] = postId
+  obj['id'] = postId;
+  obj['createdAt'] = new Date();
   const posts = [...post, obj];
   await insertDB(posts, 'postModel')
 
@@ -96,6 +97,40 @@ const incrementLikesForAPost = async (postId, userId) => {
   return post;
 }
 
+const getPost = (postId) => {
+  const {id, title, likes, description} = post.find(x => x.id === postId)
+  return {id, title, likes, description}
+}
+
+const deletePost = async (postId, userId) => {
+  const findPost = post.find((x) => x.id === postId && x.userId === userId)
+  if(findPost) {
+    console.log("fvghjkl")
+    const removePost = post.filter((x) => x.id !== postId && x.userId !== userId);
+    await insertDB(removePost, 'postModel');
+    return true
+  } else {
+    return false
+  }
+}
+
+const updatePost = async (postId, userId, obj) => {
+  const findPost = post.find((x) => x.id === postId && x.userId === userId)
+  if(findPost) {
+    const updatedPost = {
+      ...findPost,
+      ...obj,
+    }  
+
+    const removePost = post.filter((x) => x.id !== postId);
+    let allPosts = [...removePost, updatedPost];
+    await insertDB(allPosts, 'postModel');
+    return {status : true, msg : updatedPost}
+  } else {
+    return {status : false, msg : "you dont have access to update this post"}
+  }
+}
+
 module.exports = {
   findEmail,
   InsertUser,
@@ -105,7 +140,10 @@ module.exports = {
   getTitle,
   getAllPostsOfUser,
   getAllposts,
-  incrementLikesForAPost
+  incrementLikesForAPost,
+  getPost,
+  deletePost,
+  updatePost
 };
 
 
