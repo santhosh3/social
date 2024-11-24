@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
-const fs = require("fs");
+const fs = require("fs").promises;
 const path = require("path");
 dotenv.config();
 
@@ -16,7 +16,8 @@ const descryptPassword = (userpassword, dbPassword) => {};
 
 const insertDB = async (data, fileName) => {
    const filePath = path.join(__dirname, `../models/${fileName}.json`);
-   await fs.writeFile(filePath, JSON.stringify(data));
+   const w = await fs.writeFile(filePath, JSON.stringify(data));
+   return w
 };
 
 

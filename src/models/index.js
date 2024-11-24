@@ -3,8 +3,6 @@ const post = require("./postModel.json");
 const { v4: uuidv4 } = require("uuid");
 const like = require("./likeModel.json");
 const bcrypt = require("bcryptjs");
-const path = require("path");
-const fs = require("fs").promises;
 const { createToken, insertDB } = require("../utils");
 
 const findEmail = (email) => {
@@ -21,12 +19,8 @@ const getUserById = (id) => {
 
 const InsertUser = async (obj) => {
   const hashedPassword = await bcrypt.hash(obj.password, 10);
-  const createId = uuidv4()
-  obj = {
-    ...obj,
-    id: createId,
-    password: hashedPassword,
-  };
+  obj['id'] = uuidv4();
+  obj['password'] = hashedPassword
   const users = [...user, obj];
   await insertDB(users, 'userModel');
   return obj;
@@ -38,15 +32,10 @@ const getTitle = (title) => {
 
 const InsertPost = async (obj) => {
   const postId = uuidv4();
-  obj = {
-    id: postId,
-    ...obj
-  }
+  obj['id'] = postId
   const posts = [...post, obj];
-  await fs.writeFile(
-    path.join(__dirname, "postModel.json"),
-    JSON.stringify(posts)
-  );
+  await insertDB(posts, 'postModel')
+
   return obj
 }
 
@@ -70,52 +59,39 @@ const incrementLikesForAPost = async (postId, userId) => {
 
       //update post
       const posts = [...post];
-      await fs.writeFile(
-        path.join(__dirname, "postModel.json"),
-        JSON.stringify(posts)
-      );
+      await insertDB(posts, 'postModel')
 
       //update likes
       const likes = [...like];
-      await fs.writeFile(
-        path.join(__dirname, "likeModel.json"),
-        JSON.stringify(likes)
-      );
+      await insertDB(likes, 'likeModel')
 
+      //return posts
       return posts;
     } else {
       checkLikesByUser.like = true;
       obj.likes++;
-      const posts = [...post];
 
-      //update post
-      await fs.writeFile(
-        path.join(__dirname, "postModel.json"),
-        JSON.stringify(posts)
-      );
+      //update posts
+      const posts = [...post];
+      await insertDB(posts, 'postModel')
 
       //update likes
       const likes = [...like];
-      await fs.writeFile(
-        path.join(__dirname, "likeModel.json"),
-        JSON.stringify(likes)
-      );
+      await insertDB(likes, 'likeModel')
+
+      //return posts
       return posts;
     }
   }
 
   obj.likes++;
   const likes = [...like, {postId, userId, like:true}];
-  await fs.writeFile(
-    path.join(__dirname, "likeModel.json"),
-    JSON.stringify(likes)
-  );
+  await insertDB(likes, 'likeModel')
+
 
   const posts = [...post];
-  await fs.writeFile(
-    path.join(__dirname, "postModel.json"),
-    JSON.stringify(posts)
-  );
+  await insertDB(posts, 'postModel')
+
 
   return post;
 }
