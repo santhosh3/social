@@ -1,6 +1,7 @@
 const { findEmail, InsertUser, getUserByEmail } = require("../models");
 const { createToken } = require("../utils");
 const bcrypt = require("bcryptjs");
+const {users} = require("../models")
 
 
 function isValid(body) {
@@ -51,6 +52,18 @@ const LoginUser = async (req, res) => {
 }
 
 
+//auth
+
+const showUsers = async(req, res) => {
+    try {
+        let user = req.user.id;
+        const showUser = await users(user);
+        return res.status(200).send({ status: true, message: showUser})
+    } catch (error) {
+        return res.status(500).json({ status: false, message: error.message })
+    }
+}
+
 module.exports = {
-    RegisterUser, LoginUser
+    RegisterUser, LoginUser, showUsers
 }

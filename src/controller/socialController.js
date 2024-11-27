@@ -1,9 +1,10 @@
-const { InsertPost, getTitle, getAllPostsOfUser, getAllposts, incrementLikesForAPost, getPost, deletePost, updatePost } = require("../models");
+const { InsertPost, getTitle, getAllPostsOfUser, getAllposts, incrementLikesForAPost, getPost, deletePost, updatePost, followers } = require("../models");
 
 const getUserByToken = async (req, res) => {
     try {
-        const getAllPostsOfAuthor = getAllPostsOfUser(req.user.id)
-        return res.status(200).json({ status: true, message: { ...req.user, posts: getAllPostsOfAuthor } });
+        const getAllPostsOfAuthor = getAllPostsOfUser(req.user.id);
+        const [follow, followed] = followers(req.user.id);
+        return res.status(200).json({ status: true, message: { ...req.user, follow, followed, posts: getAllPostsOfAuthor } });
     } catch (error) {
         return res.status(500).json({ status: true, message: error.message });
     }

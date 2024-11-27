@@ -16,7 +16,7 @@ const descryptPassword = (userpassword, dbPassword) => {};
 
 const insertDB = async (data, fileName) => {
    const filePath = path.join(__dirname, `../models/${fileName}.json`);
-   const w = await fs.writeFile(filePath, JSON.stringify(data));
+   const w = await fs.writeFile(filePath, JSON.stringify(data,null,2));
    return w
 };
 

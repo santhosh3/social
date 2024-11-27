@@ -3,7 +3,9 @@ const post = require("./postModel.json");
 const { v4: uuidv4 } = require("uuid");
 const like = require("./likeModel.json");
 const bcrypt = require("bcryptjs");
+const comment = require("./commentModel.json");
 const { createToken, insertDB } = require("../utils");
+const follow = require("./followModel.json");
 
 const findEmail = (email) => {
   return user.find((x) => x.email === email) ? true : false;
@@ -98,8 +100,15 @@ const incrementLikesForAPost = async (postId, userId) => {
 }
 
 const getPost = (postId) => {
-  const {id, title, likes, description} = post.find(x => x.id === postId)
-  return {id, title, likes, description}
+  const {id, title, likes, description} = post.find(x => x.id === postId);
+  const comments = comment[postId];
+  let commentForPost 
+  if(!Array.isArray(comments)) {
+    commentForPost = []
+  } else {
+    commentForPost = comment[postId].map(x =>  x.comment)
+  }
+  return {id, title, likes, description, comment : commentForPost};
 }
 
 const deletePost = async (postId, userId) => {
@@ -131,6 +140,47 @@ const updatePost = async (postId, userId, obj) => {
   }
 }
 
+
+const createComment = async(commentByUser,postId,userId) => {
+   let obj = {
+      commentId : uuidv4(),
+      comment : commentByUser,
+      userId
+   }
+   let findPostId = comment[postId];
+   if(findPostId){
+      comment[postId] = [...findPostId, obj];
+   } else {
+      comment[postId] = [obj]
+   }
+   await insertDB(comment, "commentModel");
+   return obj;
+}
+
+const users = (id) => {
+  const userFollow = follow.filter(x => (x.follow == id || x.followBy == id) && x.accept).map(x => [x.follow,x.followBy])
+  const followeduser = [...new Set(userFollow.flat(Infinity))];
+  return user.filter(x => x.id != id && !followeduser.includes(x.id));
+}
+
+const followers = (id) => {
+  console.log(id)
+  return [follow.filter(x => x.follow == id && x.accept).length, follow.filter(x => x.followBy == id && x.accept).length];
+}
+
+const createFollow = async(followedBy, follower) => {
+   await insertDB([...follow, {follow : follower, followedBy : followedBy, accept : false}], "followModel")
+}
+
+const acceptRequest= async(followedBy, follower) => {
+  let obj = follow.find(x => x.follow === follower && x.followBy === followedBy);
+  obj.accept = true;
+  await insertDB([...follow, obj], "followModel")
+}
+
+
+
+
 module.exports = {
   findEmail,
   InsertUser,
@@ -143,7 +193,12 @@ module.exports = {
   incrementLikesForAPost,
   getPost,
   deletePost,
-  updatePost
+  updatePost,
+  createComment,
+  users,
+  followers,
+  createFollow,
+  acceptRequest
 };
 
 
