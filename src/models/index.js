@@ -173,9 +173,9 @@ const createFollow = async(followedBy, follower) => {
 }
 
 const acceptRequest= async(followedBy, follower) => {
-  let obj = follow.find(x => x.follow === follower && x.followBy === followedBy);
+  let obj = follow.find(x => x.follow === follower && x.followedBy === followedBy);
   obj.accept = true;
-  await insertDB([...follow, obj], "followModel")
+  await insertDB([...follow], "followModel")
 }
 
 
