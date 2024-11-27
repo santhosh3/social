@@ -10,5 +10,35 @@
     "email": "santhosh@email.com",
     "password": "$2a$10$U8ALoLwamGyWI3vH1VG2vekMyuq0/9YE2uxLY93JFOT.b6esXPWdO",
     "id": "4ebac54f-35e1-465f-be27-aab31fb80e06"
+  },
+  {
+    "username": "kakashi",
+    "email": "kakashi@email.com",
+    "password": "$2a$10$MmVmvLjpjU83.iWa.adiDOYKLCk210lUsDQI8mVDR4VPzQeAPeWam",
+    "id": "c97329cd-0111-4576-8825-0b1125121c8c"
+  },
+  {
+    "username": "sakura",
+    "email": "sakura@email.com",
+    "password": "$2a$10$GrODOa5QdQhNh/OZXmHlHeNKpSUwWg0RpU7ZIJizJHO8j37aSRMO6",
+    "id": "3a846972-3011-44fb-9dd1-c9ed6a473ef7"
+  },
+  {
+    "username": "naruto",
+    "email": "naruto@email.com",
+    "password": "$2a$10$QNoyO3aKTJMrf.XNgRTaO.2dOaZh8UiPhVnhvV45I8ms9AoxOJ1vS",
+    "id": "61ab0d4e-a218-41b4-8994-9e31bd652a51"
+  },
+  {
+    "username": "kushina",
+    "email": "kushina@email.com",
+    "password": "$2a$10$IVv89aLKXU8e1WD8dzP7Be.By84zrnN55GHjOcEPoklsWX4qWY852",
+    "id": "6d57e808-c487-46e9-9062-80f07347ed2d"
+  },
+  {
+    "username": "tanjiro",
+    "email": "tanjiro@email.com",
+    "password": "$2a$10$v0sxj5eQcHQ7q2hYqOrO4ut6oB5PulozU99tlNgibuZurssbyjbPG",
+    "id": "4d018b26-1cd3-4845-ba2e-cccbcab47614"
   }
 ]

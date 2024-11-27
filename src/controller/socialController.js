@@ -14,6 +14,9 @@ const createPostForUser = async (req, res) => {
     try {
         const { title, description } = req.body;
         const userId = req?.user?.id;
+        if (!title || !description) {
+            return res.status(400).json({ status: false, message: "fields are missing" }) 
+        }
         if (getTitle(title)) {
             return res.status(400).json({ status: false, message: "Title is already present please select another title" })
         }
@@ -35,7 +38,7 @@ const getAllPosts = async (req, res) => {
 
 const likePost = async (req, res) => {
     try {
-        let postId = req?.id?.postId;
+        let postId = req?.body?.postId;
         let userId = req?.user?.id;
         const posts = await incrementLikesForAPost(postId, userId)
         return res.status(200).send({ status: true, message: posts });
